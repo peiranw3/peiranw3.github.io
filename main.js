@@ -1,4 +1,4 @@
-let currentScene = 0
+let currentScene = 4
 var width = 600
 var height = 400
 let margin = {top: 10, right: 30, bottom: 30, left: 40}
@@ -236,32 +236,33 @@ function drawQualityHistogram() {
         .style("opacity", 0)
     })
 
-  let text_x = 2
-  let text_y = 80
+  let annotations = [
+    {
+      note: {
+            label: "Most people have sleep quality rating 8",
+        },
+      connector: { 
+        end: "arrow",
+         },
+      x: x(8.5),
+      y: y(d3.max(bins, d => d.length)),
+      dx: x(-3),
+      dy: 100,
+      subject: {
+          type: "line",
+      },
+      color: "#fc9e60"
+    }
+  ]
+
+  const makeAnnotations = d3.annotation()
+    .annotations(annotations);
+
+  svg.append("g")
+    .attr("class", "annotation-group")
+    .style("font-size", "19px")
+    .call(makeAnnotations);
   
-  svg.append("text")
-    .attr("y", y(text_y))
-    .attr("x", x(text_x))
-    .attr("fill", "#fc9e60")
-    .attr("font-size", "19px")
-    .attr("stroke-width", "2px")
-    .text("Most people rate their");
-  
-  svg.append("text")
-    .attr("y", y(text_y - 5))
-    .attr("x", x(text_x))
-    .attr("fill", "#fc9e60")
-    .attr("font-size", "19px")
-    .attr("stroke-width", "2px")
-    .text("sleep quality as 8");
-  
-  svg.append("text")
-    .attr("y", y(text_y - 10))
-    .attr("x", x(text_x))
-    .attr("fill", "#fc9e60")
-    .attr("font-size", "19px")
-    .attr("stroke-width", "2px")
-    .text("followed by a rating of 6.");
 }
 
 function drawSleepFactor() {
@@ -704,25 +705,53 @@ function drawHeartRateWithSleepDisorder() {
     .attr("stroke", fillColor)
     .attr("stroke-width", 2)
     .attr("d", line)
+
   
-  let text_x = "None"
-  let text_y = 74
+  let annotations = [
+    {
+      note: {
+            label: "The average resting heart rate is lowest for people don't have sleep disorder",
+        },
+      connector: { 
+        end: "arrow",
+          },
+      x: x("None"),
+      y: y(d3.min(info, d => d.avg)),
+      dx: x("None") - 200,
+      dy: -y(81),
+      subject: {
+          type: "line",
+      },
+      color: "#fc9e60"
+    }
+  ]
+
+  const makeAnnotations = d3.annotation()
+    .annotations(annotations);
+
+  svg.append("g")
+    .attr("class", "annotation-group")
+    .style("font-size", "19px")
+    .call(makeAnnotations);
   
-  svg.append("text")
-    .attr("y", y(text_y))
-    .attr("x", x(text_x))
-    .attr("fill", "#fc9e60")
-    .attr("font-size", "19px")
-    .attr("stroke-width", "2px")
-    .text("Sleep disorder results in");
+  // let text_x = "None"
+  // let text_y = 74
   
-  svg.append("text")
-    .attr("y", y(text_y - 1.2))
-    .attr("x", x(text_x))
-    .attr("fill", "#fc9e60")
-    .attr("font-size", "19px")
-    .attr("stroke-width", "2px")
-    .text("a higher average resting heart rate");
+  // svg.append("text")
+  //   .attr("y", y(text_y))
+  //   .attr("x", x(text_x))
+  //   .attr("fill", "#fc9e60")
+  //   .attr("font-size", "19px")
+  //   .attr("stroke-width", "2px")
+  //   .text("Sleep disorder results in");
+  
+  // svg.append("text")
+  //   .attr("y", y(text_y - 1.2))
+  //   .attr("x", x(text_x))
+  //   .attr("fill", "#fc9e60")
+  //   .attr("font-size", "19px")
+  //   .attr("stroke-width", "2px")
+  //   .text("a higher average resting heart rate");
   
 }
 
