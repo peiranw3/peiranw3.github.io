@@ -1,10 +1,11 @@
-let currentScene = 4
+let currentScene = 0
 var width = 600
 var height = 400
 let margin = {top: 10, right: 30, bottom: 30, left: 40}
 var fillColor = "rgb(191,219,213)"
 let regression_line_status = false
 let pathColor = "#fc9e60"
+let slides = document.getElementsByClassName("slide")
 
 d3.csv("dataset/Sleep_health_and_lifestyle_dataset.csv").then(data => {
   window.sleepData = data;
@@ -29,6 +30,9 @@ function drawScene(sceneIndex) {
     prev.style.display = "none"
     next.style.display = "none"
     start.style.display = "inline-block"
+    for (s of slides) {
+      s.style.display = "none"
+    }
   }
   else {
     intro[0].style.display = "none"
@@ -36,38 +40,60 @@ function drawScene(sceneIndex) {
     prev.style.display = "inline-block"
     next.style.display = "inline-block"
     start.style.display = "none"
+    for (s of slides) {
+      s.style.display = "inline-block"
+    }
     switch (sceneIndex) {
     case 1:
       drawQualityHistogram()
+      selectedColor(1)
       break
     case 2:
       drawSleepFactor()
+      selectedColor(2)
       break
     case 3:
       drawMentalFactor()
+      selectedColor(3)
       break
     case 4:
       drawHeartRateWithSleepDisorder()
+      selectedColor(4)
       break
     }
   }
 }
 
 document.getElementById("prev").addEventListener("click", () => {
-  currentScene = (currentScene - 1) % 5;
-  drawScene(currentScene);
+  currentScene = (currentScene - 1) % 5
+  drawScene(currentScene)
 })
 
 document.getElementById("next").addEventListener("click", () => {
-  currentScene = (currentScene + 1) % 5;
-  drawScene(currentScene);
+  currentScene = (currentScene + 1) % 5
+  drawScene(currentScene)
 })
 
 document.getElementById("start").addEventListener("click", () => {
   currentScene += 1
-  drawScene(currentScene);
+  drawScene(currentScene)
 })
 
+function selectedColor(idx) {
+  for (let i=0; i<4; i++) {
+    if (i + 1 == idx) {
+      slides[i].style.backgroundColor = "rgb(109, 115, 142)"
+    }
+    else {
+      slides[i].style.backgroundColor = ""
+    }
+  }
+}
+
+function navigateSlides(idx) {
+  currentScene = idx;
+  drawScene(currentScene)
+}
 
 function findLineByLeastSquares(values_x, values_y) {
   var sum_x = 0;
