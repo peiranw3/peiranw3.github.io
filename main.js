@@ -1,4 +1,4 @@
-let currentScene = 4
+let currentScene = 0
 var width = 600
 var height = 400
 let margin = {top: 10, right: 30, bottom: 30, left: 40}
@@ -172,10 +172,10 @@ function drawQualityHistogram() {
   console.log("draw quality overview")
   let svg = d3.select("#visualization")
   .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("width", width + margin.left + margin.right + 100)
+    .attr("height", height + margin.top + margin.bottom + 50)
   .append("g")
-    .attr("transform", "translate(40, 10)")
+    .attr("transform", "translate(100, 10)")
   
   let tooltip = d3.select("#visualization")
   .append("div")
@@ -205,6 +205,25 @@ function drawQualityHistogram() {
   svg.append("g")
     .attr("class", "axis")
     .call(d3.axisLeft(y))
+  
+  svg.append("text")
+    .attr("x", window.width / 2 )
+    .attr("y", y(0) + 50 )
+    .style("text-anchor", "middle")
+    .text("Sleep Quality Rating")
+    .style("font-size", "18px")
+    .attr("fill", "white")
+  
+  svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -window.height / 2 )
+    .attr("y", x(0) - 5)
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Number of People")
+    .attr("fill", "white")
+    .style("font-size", "18px")
+  
   
   svg.selectAll("rect")
     .data(bins)
@@ -293,10 +312,10 @@ function drawSleepFactor() {
 
   let svg = d3.select("#visualization")
   .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("width", width + margin.left + margin.right + 100)
+    .attr("height", height + margin.top + margin.bottom + 50)
   .append("g")
-    .attr("transform", "translate(40, 10)")
+    .attr("transform", "translate(100, 10)")
   
   let tooltip = d3.select("#visualization")
   .append("div")
@@ -320,6 +339,24 @@ function drawSleepFactor() {
   svg.append("g")
     .call(d3.axisLeft(y))
     .attr("class", "axis")
+  
+  svg.append("text")
+    .attr("x", window.width / 2 )
+    .attr("y", y(0) + 5 )
+    .style("text-anchor", "middle")
+    .text("Level of Physical Activity")
+    .style("font-size", "18px")
+    .attr("fill", "white")
+  
+  svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -window.height / 2 )
+    .attr("y", x(0) + 120)
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Sleep Quality Rating")
+    .attr("fill", "white")
+    .style("font-size", "18px")
   
   const activitySleepData = d3.rollup(window.sleepData,
     v => v.length,
@@ -445,10 +482,10 @@ function drawMentalFactor() {
   console.log("draw mental factor")
   let svg = d3.select("#visualization")
   .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("width", width + margin.left + margin.right + 100)
+    .attr("height", height + margin.top + margin.bottom + 50)
   .append("g")
-    .attr("transform", "translate(40, 10)")
+    .attr("transform", "translate(100, 10)")
   
   let tooltip = d3.select("#visualization")
   .append("div")
@@ -492,6 +529,24 @@ function drawMentalFactor() {
   svg.append("g")
     .call(d3.axisLeft(y))
     .attr("class", "axis")
+  
+  svg.append("text")
+    .attr("x", window.width / 2 )
+    .attr("y", y(3) + 40)
+    .style("text-anchor", "middle")
+    .text("Level of Stress")
+    .style("font-size", "18px")
+    .attr("fill", "white")
+  
+  svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -window.height / 2 )
+    .attr("y", x(0) + 90)
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Sleep Quality Rating")
+    .attr("fill", "white")
+    .style("font-size", "18px")
 
   const stressSleepData = d3.rollup(window.sleepData,
     v => v.length,
@@ -638,10 +693,10 @@ function drawHeartRateWithSleepDisorder() {
 
   let svg = d3.select("#visualization")
     .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("width", width + margin.left + margin.right + 100)
+      .attr("height", height + margin.top + margin.bottom + 50)
     .append("g")
-      .attr("transform", "translate(40, 10)")
+      .attr("transform", "translate(100, 10)")
   
   let tooltip = d3.select("#visualization")
     .append("div")
@@ -683,6 +738,24 @@ function drawHeartRateWithSleepDisorder() {
   svg.append("g")
     .call(d3.axisLeft(y))
     .attr("class", "axis")
+  
+  svg.append("text")
+    .attr("x", window.width / 2 )
+    .attr("y", y(64) + 40)
+    .style("text-anchor", "middle")
+    .text("Sleep Disorder Type")
+    .style("font-size", "18px")
+    .attr("fill", "white")
+  
+  svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -window.height / 2 )
+    .attr("y", x("Sleep Apnea") - 50)
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Sleep Quality Rating")
+    .attr("fill", "white")
+    .style("font-size", "18px")
   
   const area = d3.area()
     .x(d => x(d.sleepDisorder))

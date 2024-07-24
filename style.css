@@ -230,3 +230,9 @@ header {
 .checkbox-wrapper-14 *:after {
   box-sizing: inherit;
 }
+
+.axis-label {
+  font-size: 12px;
+  font-weight: bold;
+  background-color: red;
+}
