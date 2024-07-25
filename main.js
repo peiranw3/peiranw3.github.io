@@ -1,4 +1,4 @@
-let currentScene = 3
+let currentScene = 0
 var width = 600
 var height = 400
 let margin = {top: 10, right: 30, bottom: 30, left: 40}
