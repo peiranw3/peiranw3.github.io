@@ -113,6 +113,11 @@ header {
   opacity: 1.0;
   transition: all 500ms linear;
 }
+
+.select-dropdown {
+  margin-top: 15px;
+}
+
 @supports (-webkit-appearance: none) or (-moz-appearance: none) {
   .checkbox-wrapper-14 input[type=checkbox] {
     --active: #275EFE;

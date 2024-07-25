@@ -1,4 +1,4 @@
-let currentScene = 0
+let currentScene = 3
 var width = 600
 var height = 400
 let margin = {top: 10, right: 30, bottom: 30, left: 40}
@@ -156,6 +156,89 @@ function findLineByLeastSquares(values_x, values_y) {
   return [result_values_x, result_values_y];
 }
 
+function generateCategoryData(category, factor) {
+  let sleepData = window.sleepData
+  if (category != "All") {
+    sleepData = sleepData.filter(obj => obj["Sleep Disorder"] == category)
+  }
+ 
+  const activitySleepData = d3.rollup(sleepData,
+    v => v.length,
+    d => d[factor],
+    d => d["Quality of Sleep"]
+  )
+
+  const flatData = []
+  activitySleepData.forEach((v, k1) => {
+    v.forEach((cnt, k2) => {
+      flatData.push({x_value: k1, sleep_quality: k2, count: cnt})
+    })
+  })
+  return flatData
+}
+
+function generateScatterPlot(svg, tooltip, data, x, y, c) {
+  const r = d3.scaleLinear()
+    .domain([0, 69])
+    .range(([7, 30]))
+
+  svg.selectAll("circle").remove()
+  
+  svg.selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+      .attr("cx", d => x(d.x_value))
+      .attr("cy", d => y(d.sleep_quality))
+      .attr("r", d => r(d.count))
+      .style("fill", fillColor)
+      .attr("class", `${c} line_not_show`)
+    .on("mouseover", (event, d) => {
+      tooltip.transition()
+        .duration(50)
+        .style("opacity", 0.9)
+      tooltip.html(`${d.count} people with sleep quality rating ${d.sleep_quality} and physical activity level ${d.x_value}`)
+        .style("left", (event.pageX + 5) + "px")
+        .style("top", (event.pageY - 28) + "px")
+    })
+    .on("mousemove", (event, d) => {
+      tooltip.transition()
+        .duration(200)
+        .style("opacity", 0.9)
+      tooltip.html(`${d.count} people with sleep quality rating ${d.sleep_quality} and physical activity level ${d.x_value}`)
+        .style("left", (event.pageX + 5) + "px")
+        .style("top", (event.pageY - 28) + "px")
+    })
+    .on("mouseout", () => {
+      tooltip.transition()
+        .duration(200)
+        .style("opacity", 0)
+    })
+  
+
+}
+
+function regressionLineStatue(line, circles, text) {
+  if (regression_line_status == true) {
+    line.style.visibility = "visible"
+    for (i of circles) {
+      i.classList.replace("line_not_show", "line_show")
+    }
+    for (i of text) {
+      i.style.visibility = "visible"
+    }
+  }
+  else {
+    line.style.visibility = "hidden"
+    for (i of circles) {
+      i.classList.replace("line_show","line_not_show")
+    }
+    for (i of text) {
+      i.style.visibility = "hidden"
+    }
+  }
+}
+
 function drawQualityHistogram() {
 
   let header_contianer = document.getElementById("scene_header")
@@ -306,7 +389,19 @@ function drawSleepFactor() {
   header_contianer.innerHTML += `
     <div class="checkbox-wrapper-14">
       <input id="s1-14" type="checkbox" class="switch regression_line1">
-      <label for="s1-14">Show the regression line to see the trend</label>
+      <label for="s1-14">Display the regression line to observe the trend for all sleep order types.</label>
+    </div>
+  `
+
+  header_contianer.innerHTML += `
+    <div class="select-dropdown">
+      <label for="category-select">Choose a sleep disorder type:</label>
+      <select id="category-select">
+          <option value="All">All Sleep Disorder Type</option>
+          <option value="None">None</option>
+          <option value="Insomnia">Insomnia</option>
+          <option value="Sleep Apnea">Sleep Apnea</option>
+      </select>
     </div>
   `
 
@@ -326,7 +421,6 @@ function drawSleepFactor() {
     .domain([20, d3.max(window.sleepData, d => d["Physical Activity Level"])])
     .range([0, window.width])
     
-  
   svg.append("g")
     .attr("transform", `translate(0,${window.height})`)
     .call(d3.axisBottom(x))
@@ -358,18 +452,7 @@ function drawSleepFactor() {
     .attr("fill", "white")
     .style("font-size", "18px")
   
-  const activitySleepData = d3.rollup(window.sleepData,
-    v => v.length,
-    d => d["Physical Activity Level"],
-    d => d["Quality of Sleep"]
-  )
-
-  const flatData = []
-  activitySleepData.forEach((v, k1) => {
-    v.forEach((cnt, k2) => {
-      flatData.push({physical_activity: k1, sleep_quality: k2, count: cnt})
-    })
-  })
+  flatData = generateCategoryData("All", "Physical Activity Level")
 
   const x_value = []
   window.sleepData.forEach((elem) => x_value.push(parseInt(elem["Physical Activity Level"])))
@@ -381,41 +464,11 @@ function drawSleepFactor() {
     regression_line.push({pa: results[0][i], rating: results[1][i]})
   }
 
-  const r = d3.scaleLinear()
-    .domain([0, d3.max(flatData, d => d.count)])
-    .range(([7, 30]))
-  
-  svg.append("g")
-    .selectAll("dot")
-    .data(flatData)
-    .enter()
-    .append("circle")
-      .attr("cx", d => x(d.physical_activity) + (Math.random() - 0.5) * 10)
-      .attr("cy", d => y(d.sleep_quality) + (Math.random() - 0.5) * 10)
-      .attr("r", d => r(d.count))
-      .style("fill", fillColor)
-      .attr("class", "activity_cicle line_not_show")
-    .on("mouseover", (event, d) => {
-      tooltip.transition()
-        .duration(50)
-        .style("opacity", 0.9)
-      tooltip.html(`${d.count} people with sleep quality rating ${d.sleep_quality} and physical activity level ${d.physical_activity}`)
-        .style("left", (event.pageX + 5) + "px")
-        .style("top", (event.pageY - 28) + "px")
-    })
-    .on("mousemove", (event, d) => {
-      tooltip.transition()
-        .duration(200)
-        .style("opacity", 0.9)
-      tooltip.html(`${d.count} people with sleep quality rating ${d.sleep_quality} and physical activity level ${d.physical_activity}`)
-        .style("left", (event.pageX + 5) + "px")
-        .style("top", (event.pageY - 28) + "px")
-    })
-    .on("mouseout", () => {
-      tooltip.transition()
-        .duration(200)
-        .style("opacity", 0)
-    })
+  generateScatterPlot(svg, tooltip, flatData, x, y, "activity_cicle")
+  document.getElementById("category-select").addEventListener("change", (event) => {
+    data = generateCategoryData(event.target.value, "Physical Activity Level")
+    generateScatterPlot(svg, tooltip, data, x, y, "activity_cicle")
+  })
   
   svg.append("path")
     .attr("id", "PA_regression_line")
@@ -455,26 +508,8 @@ function drawSleepFactor() {
 
   document.getElementsByClassName("regression_line1")[0].addEventListener("click", () => {
     regression_line_status = !regression_line_status
-    if (regression_line_status == true) {
-      line.style.visibility = "visible"
-      for (i of circles) {
-        i.classList.replace("line_not_show", "line_show")
-      }
-      for (i of text) {
-        i.style.visibility = "visible"
-      }
-    }
-    else {
-      line.style.visibility = "hidden"
-      for (i of circles) {
-        i.classList.replace("line_show","line_not_show")
-      }
-      for (i of text) {
-        i.style.visibility = "hidden"
-      }
-    }
+    regressionLineStatue(line, circles, text)
   })
-
 
 }
 
@@ -513,7 +548,19 @@ function drawMentalFactor() {
   header_contianer.innerHTML += `
     <div class="checkbox-wrapper-14">
       <input id="s1-14" type="checkbox" class="switch regression_line2">
-      <label for="s1-14">Show the regression line to see the trend</label>
+      <label for="s1-14">Display the regression line to observe the trend for all sleep order types.</label>
+    </div>
+  `
+
+  header_contianer.innerHTML += `
+    <div class="select-dropdown">
+      <label for="category-select">Choose a sleep disorder type:</label>
+      <select id="category-select">
+          <option value="All">All Sleep Disorder Type</option>
+          <option value="None">None</option>
+          <option value="Insomnia">Insomnia</option>
+          <option value="Sleep Apnea">Sleep Apnea</option>
+      </select>
     </div>
   `
 
@@ -548,18 +595,8 @@ function drawMentalFactor() {
     .attr("fill", "white")
     .style("font-size", "18px")
 
-  const stressSleepData = d3.rollup(window.sleepData,
-    v => v.length,
-    d => d["Stress Level"],
-    d => d["Quality of Sleep"]
-  )
-
-  const flatData = []
-  stressSleepData.forEach((v, k1) => {
-    v.forEach((cnt, k2) => {
-      flatData.push({stress_level: k1, sleep_quality: k2, count: cnt})
-    })
-  })
+  let flatData = generateCategoryData("All", "Stress Level")
+  console.log(flatData)
 
   const x_value = []
   window.sleepData.forEach((elem) => x_value.push(parseInt(elem["Stress Level"])))
@@ -571,42 +608,11 @@ function drawMentalFactor() {
     regression_line.push({stress: results[0][i], rating: results[1][i]})
   }
 
-  const r = d3.scaleLinear()
-    .domain([0, d3.max(flatData, d => d.count)])
-    .range(([7, 30]))
-  
-  svg.append("g")
-    .selectAll("circle")
-    .data(flatData)
-    .enter()
-    .append("circle")
-      .attr("cx", d => x(d.stress_level) + (Math.random() - 0.5) * 10)
-      .attr("cy", d => y(d.sleep_quality) + (Math.random() - 0.5) * 10)
-      .attr("r", d => r(d.count))
-      .attr("opacity", 1)
-      .style("fill", fillColor)
-      .attr("class", "stress_cicle line_not_show")
-    .on("mouseover", (event, d) => {
-      tooltip.transition()
-        .duration(50)
-        .style("opacity", 0.9)
-      tooltip.html(`${d.count} people with sleep quality rating ${d.sleep_quality} and stress level ${d.stress_level}`)
-        .style("left", (event.pageX + 5) + "px")
-        .style("top", (event.pageY - 28) + "px")
-    })
-    .on("mousemove", (event, d) => {
-      tooltip.transition()
-        .duration(200)
-        .style("opacity", 0.9)
-      tooltip.html(`${d.count} people with sleep quality rating ${d.sleep_quality} and stress level ${d.stress_level}`)
-        .style("left", (event.pageX + 5) + "px")
-        .style("top", (event.pageY - 28) + "px")
-    })
-    .on("mouseout", () => {
-      tooltip.transition()
-        .duration(200)
-        .style("opacity", 0)
-    })
+  generateScatterPlot(svg, tooltip, flatData, x, y, "stress_cicle")
+  document.getElementById("category-select").addEventListener("change", (event) => {
+    data = generateCategoryData(event.target.value, "Stress Level")
+    generateScatterPlot(svg, tooltip, data, x, y, "stress_cicle")
+  })
   
   svg.append("path")
     .datum(regression_line)
@@ -646,24 +652,7 @@ function drawMentalFactor() {
   
   document.getElementsByClassName("regression_line2")[0].addEventListener("click", () => {
     regression_line_status = !regression_line_status
-    if (regression_line_status == true) {
-      line.style.visibility = "visible"
-      for (i of circles) {
-        i.classList.replace("line_not_show", "line_show")
-      }
-      for (i of text) {
-        i.style.visibility = "visible"
-      }
-    }
-    else {
-      line.style.visibility = "hidden"
-      for (i of circles) {
-        i.classList.replace("line_show","line_not_show")
-      }
-      for (i of text) {
-        i.style.visibility = "hidden"
-      }
-    }
+    regressionLineStatue(line, circles, text)
   })
 }
 
