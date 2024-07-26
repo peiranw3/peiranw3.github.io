@@ -245,7 +245,7 @@ function drawQualityHistogram() {
   header_contianer.innerHTML = `
      <h2>Overview of Sleep Quality</h2>
      <p>The distribution of sleep quality among individuals is a crucial metric to understand 
-     the general sleep patterns within a population. In this scene, we present a histogram that 
+     the general sleep patterns within a population. This histogram
      displays how many people fall into various sleep quality categories. The rating is subjective and ranges from 1 to 10.</p>
      <p>Hovering the mouse over the 
      corresponding rectangle on the chart reveals detailed information about the exact number of 
@@ -373,23 +373,22 @@ function drawSleepFactor() {
   let header_contianer = document.getElementById("scene_header")
   header_contianer.innerHTML = `
      <h2>Impact of Physical Activity on Sleep Quality</h2>
-     <p>This scene delves into the relationship between physical activity levels and sleep quality. 
-     Using a scatter plot, we visualize how different levels of physical activity correlate with 
+     <p>This plot delves into the relationship between physical activity levels and sleep quality. 
+     It visualizes how different levels of physical activity correlate with 
      the sleep quality individuals report. The level of physical activity is measured by the number of 
      minutes a person engages in physical activity daily. The radius of each scatter point is scaled 
      according to the number of people with the same level of physical activity and the same sleep quality 
      rating. 
      </p>
-     <p>Hovering the mouse over the 
-     corresponding circle on the chart reveals detailed information about the exact number of 
-     people who has that level of physical activity and gave that rating. 
+     <p>Hovering the mouse over a circle on the chart reveals detailed information about the exact number of 
+     people with that level of physical activity and rating.
      </p>
   `
 
   header_contianer.innerHTML += `
     <div class="checkbox-wrapper-14">
       <input id="s1-14" type="checkbox" class="switch regression_line1">
-      <label for="s1-14">Display the regression line to observe the trend for all sleep order types.</label>
+      <label for="s1-14">Display the regression line to observe the trend for all sleep disorder types.</label>
     </div>
   `
 
@@ -533,8 +532,8 @@ function drawMentalFactor() {
     let header_contianer = document.getElementById("scene_header")
     header_contianer.innerHTML = `
       <h2>Impact of Stress Level on Sleep Quality</h2>
-      <p>The third scene examines the connection between mental health and sleep quality. By 
-      plotting mental health scores against sleep quality, we aim to uncover how psychological 
+      <p>This plot examines the connection between mental health and sleep quality. By 
+      plotting mental health scores against sleep quality, it uncovers how psychological 
       well-being affects sleep patterns. The level of stress is a subjective rating experienced by the person, ranging from 1 to 10. 
       The radius of each scatter point is scaled according to the number of people with the same level of physical activity and the same sleep quality 
       rating. 
@@ -548,7 +547,7 @@ function drawMentalFactor() {
   header_contianer.innerHTML += `
     <div class="checkbox-wrapper-14">
       <input id="s1-14" type="checkbox" class="switch regression_line2">
-      <label for="s1-14">Display the regression line to observe the trend for all sleep order types.</label>
+      <label for="s1-14">Display the regression line to observe the trend for all sleep disorder types.</label>
     </div>
   `
 
@@ -696,7 +695,7 @@ function drawHeartRateWithSleepDisorder() {
   header_contianer.innerHTML = `
       <h2>How Sleep Quality Affect Resting Heart Rate</h2>
       <p>
-      This scene examines the relationship between different types of sleep 
+      This plot examines the relationship between different types of sleep 
       disorders and resting heart rate. A lower resting heart rate typically means a better
       heart health. By comparing the average resting heart rates 
       across various sleep disorders, this visualization aims to uncover potential
@@ -705,7 +704,7 @@ function drawHeartRateWithSleepDisorder() {
       </p>
       <p>
       In this chart, the line plots the average of heart rate while shaded areas represents confidence intervals of that
-      between three diferent types of sleep diorder: sleep apnea, none, and insomnia.
+      between three diferent types of sleep diorder type: sleep apnea, none, and insomnia.
       </p>
   `
 
