@@ -94,7 +94,9 @@ function navigateSlides(idx) {
   currentScene = idx;
   drawScene(currentScene)
 }
-
+// Linear Least Squares implementation
+// Source: https://dracoblue.net/dev/linear-least-squares-in-javascript/
+// Author: DracoBlue
 function findLineByLeastSquares(values_x, values_y) {
   var sum_x = 0;
   var sum_y = 0;

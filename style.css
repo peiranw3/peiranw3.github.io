@@ -118,6 +118,14 @@ header {
   margin-top: 15px;
 }
 
+.axis-label {
+  font-size: 12px;
+  font-weight: bold;
+  background-color: red;
+}
+
+
+/*Source from: https://getcssscan.com/css-checkboxes-examples*/
 @supports (-webkit-appearance: none) or (-moz-appearance: none) {
   .checkbox-wrapper-14 input[type=checkbox] {
     --active: #275EFE;
@@ -234,10 +242,4 @@ header {
 .checkbox-wrapper-14 *:before,
 .checkbox-wrapper-14 *:after {
   box-sizing: inherit;
-}
-
-.axis-label {
-  font-size: 12px;
-  font-weight: bold;
-  background-color: red;
 }
